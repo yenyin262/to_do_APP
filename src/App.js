@@ -10,18 +10,29 @@ class TodoHeader extends React.Component {
   }
 }
 // ADD TO DO  component
-class Addtodo extends React.Component {
-  render() {
-    let enterFields = this.props.enterFields;
 
-    return (
-      <form>
-        <textarea placeholder="feed the dog" onKeyPress={enterFields} />
-        <div>press enter to add</div>
-      </form>
-    );
-  }
-}
+// delete
+
+// ref is underfined =  referring to this component
+
+// class Addtodo extends React.Component {
+//   // constructor() {
+//   //   super();
+
+//   // }
+
+//   render() {
+//     let insertNewToDo = this.props.insertNewToDo;
+
+//     return (
+//       <form onSubmit={insertNewToDo}>
+//         <input type="text" placeholder="feed the dog" ref={this.toDoInput} />
+
+//         <div>press enter to add</div>
+//       </form>
+//     );
+//   }
+// }
 
 // stateless functional component
 
@@ -31,13 +42,31 @@ class Addtodo extends React.Component {
 /* { props.insertValue} the non deconstruct method */
 
 // deconstruct method
-const TodoElement = ({ index, insertValue, complete, check, id,  item }) => {
+const TodoElement = ({
+  insertValue,
+  complete,
+  check,
+  id,
+  item,
+  removeToDo
+}) => {
   return (
     <li>
       {insertValue}
-      <input type="checkbox" id={id} checked={complete} onClick={() => {check(item)}} />
+      <input
+        type="checkbox"
+        id={id}
+        checked={complete}
+        onClick={() => {
+          check(item);
+        }}
+      />
       <label htmlFor={id} />
-      <button>
+      <button
+        onClick={() => {
+          removeToDo(id);
+        }}
+      >
         <i className="fa fa-trash" />
       </button>
     </li>
@@ -61,7 +90,8 @@ class TodoList extends React.Component {
   render() {
     //console.log(this.props.foo);
     const newTodo = this.props.list; // props is a react key word
-    const {check} = this.props;
+    const { check } = this.props;
+    const { removeToDo } = this.props;
 
     // const todo = ['Learn React', 'Learn Redux', 'Learn JavaScript', 'Learn Ave', 'Learn PHP'] simple array of string values,
     const todoElements = newTodo.map((value, index) => {
@@ -74,6 +104,8 @@ class TodoList extends React.Component {
           complete={value.complete}
           id={value.id}
           check={check}
+          removeToDo={removeToDo}
+          item={value}
         />
       ); // ie. foo = 'bar' {key:index} props.foo
     });
@@ -97,7 +129,7 @@ TodoList.propTypes = {
 };
 
 const TodoCount = props => {
-  return <div> {` ${props.length}items`}</div>;
+  return <div> {` ${props.length} items`}</div>;
 };
 
 TodoCount.propTypes = {
@@ -107,61 +139,116 @@ TodoCount.propTypes = {
 class TodoApp extends React.Component {
   constructor() {
     super();
-
+    this.toDoInput = React.createRef();
     this.state = {
-      newTodo: [
-
+      toDo: [
         { id: 0, title: "Learn React", complete: false },
         { id: 1, title: "Learn Redux", complete: false },
         { id: 2, title: "Learn Javascript", complete: true },
         { id: 3, title: "Learn Ave", complete: false },
         { id: 4, title: "Learn PHP", complete: true }
       ],
-      lastId: 0
+      lastId: 4
     };
   }
-// _check(id) {
+  // _check(id) {
 
-//   const toDo = this.state.newTodo;
-//   toDo[id].complete = !toDo[id].complete;
-//   this.setState({ toDo});
-//  }
-check(newItem) {
-  const toDo = this.state.toDo;
- 
-  
-  const newTodo = toDo.map((item) => {
-    if (newItem.id === item.id) {
-      const oldComplete = item.complete;
-      item.complete = !oldComplete;
+  //   const toDo = this.state.newTodo;
+  //   toDo[id].complete = !toDo[id].complete;
+  //   this.setState({ toDo});
+  //  }
+  check(newItem) {
+    const toDo = this.state.toDo;
+    const newTodo = toDo.map(item => {
+      if (newItem.id === item.id) {
+        // newItem.id = is the current item being clicked comparing against the items
+        const oldComplete = item.complete;
+        item.complete = !oldComplete;
+      }
+      return item;
+    });
+    this.setState({ toDo: newTodo }); // update state to be the new to do
+  }
+
+  delete(idToDelete) {
+    const toDo = this.state.toDo.filter((item, index) => item.id != idToDelete); // using item.id as it will delete item of id as arrray can be re arranged
+    this.setState({ toDo });
+  }
+
+  insert = event => {
+    event.preventDefault();
+    let toDoInput = this.toDoInput.current;
+    // console.log(toDoInput);
+    if (toDoInput.value) {
+      const id = this.state.lastId + 1; // update id
+      const newTodos = [
+        ...this.state.toDo,
+        { id, title: toDoInput.value, complete: false }
+      ];
+      this.setState({
+        toDo: newTodos,
+        lastId: id
+      });
+      toDoInput.value = ""; // reset input to be blank
     }
+  };
 
-    return item;
-  });
+  clear() {
+    const toDo = this.state.toDo.filter((item, index) => !item.complete); // using item.id as it will delete item of id as arrray can be re arranged
+    this.setState({ toDo }); // filtering existing state
+    // returns true means keeping the completed
+    // returns false get rid
 
-  this.setState({ toDo: newTodo });
-}
+    // understand inverted
+  }
+
+  hasCompleted() {
+    // creating a function whereby array of items are completed / which will return true and
+    // if not completed returns false
+    let completed = this.state.toDo.filter((item, index) => item.complete);
+    return completed.length > 0;
+  }
+  // creating a function whereby if none of the items are completed
+
+  componentDidMount() {
+    this.toDoInput.current.focus();
+  }
 
   render() {
     return (
-      <div>
-        
-   
+      <div className="todo-list">
         <TodoHeader />
-        <Addtodo />
-        <TodoList list={this.state.newTodo} foo="bar" check={this.check.bind(this)} />
+        <div className="add-todo">
+          <form onSubmit={this.insert.bind(this)}>
+            <input type="text" ref={this.toDoInput} />
+            <span>(press enter to add)</span>
+          </form>
+        </div>
+        <TodoList
+          list={this.state.toDo}
+          foo="bar"
+          check={this.check.bind(this)}
+          removeToDo={this.delete.bind(this)}
+        />
         <div className="todo-admin">
-          <TodoCount length={this.state.newTodo.length} />
-          <ClearButton removeCompleted={() => alert("hi")} />
+          <TodoCount length={this.state.toDo.length} />
+          {this.hasCompleted() && (
+            <ClearButton removeCompleted={this.clear.bind(this)} />
+          )}
         </div>
       </div>
     );
   }
 }
+
+// conditionally rendering = if the condition before returns false the component after it will not show
+// not be rendered
 //  let App = () => {
 
 //   return <div>Placeholder text</div>
 
 // };
+
+// things to do = make ref work in separate todo component to make ref.current work
 
 export default TodoApp;

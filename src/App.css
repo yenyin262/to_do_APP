@@ -34,7 +34,7 @@
 
 .todo-list li span {
   flex: 1 0 60%;
-  font-size: .9rem;
+  font-size: 0.9rem;
   margin-right: 1rem;
   margin-top: 0.33333rem;
 }
@@ -124,7 +124,7 @@
   border: 1px solid #a071b8;
   color: #a071b8;
   cursor: pointer;
-  font-size: .9rem;
+  font-size: 0.9rem;
   padding: 0.16667rem 0.33333rem;
 }
 

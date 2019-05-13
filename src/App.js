@@ -9,39 +9,21 @@ class TodoHeader extends React.Component {
     return <h1>So Much To Do </h1>;
   }
 }
-// ADD TO DO  component
 
-// delete
+// //  class AddNewToDo extends React.Component {
+// // constructor()  {
+// // super()
+// // this.toDoInput = React.createRef();
+// // }
+// //   render() {
+// {/* <div className="add-todo">
+//           <form onSubmit={()=> {insert()}}>
+//             <input type="text" ref={this.toDoInput} />
+//             <span>(press enter to add)</span>
+//           </form> */}
+// //   }
+// // }
 
-// ref is underfined =  referring to this component
-
-// class Addtodo extends React.Component {
-//   // constructor() {
-//   //   super();
-
-//   // }
-
-//   render() {
-//     let insertNewToDo = this.props.insertNewToDo;
-
-//     return (
-//       <form onSubmit={insertNewToDo}>
-//         <input type="text" placeholder="feed the dog" ref={this.toDoInput} />
-
-//         <div>press enter to add</div>
-//       </form>
-//     );
-//   }
-// }
-
-// stateless functional component
-
-// stateless functional component
-
-// const TodoElement = (props) => { // props is the object
-/* { props.insertValue} the non deconstruct method */
-
-// deconstruct method
 const TodoElement = ({
   insertValue,
   complete,
@@ -93,7 +75,6 @@ class TodoList extends React.Component {
     const { check } = this.props;
     const { removeToDo } = this.props;
 
-    // const todo = ['Learn React', 'Learn Redux', 'Learn JavaScript', 'Learn Ave', 'Learn PHP'] simple array of string values,
     const todoElements = newTodo.map((value, index) => {
       return (
         <TodoElement
@@ -151,12 +132,7 @@ class TodoApp extends React.Component {
       lastId: 4
     };
   }
-  // _check(id) {
 
-  //   const toDo = this.state.newTodo;
-  //   toDo[id].complete = !toDo[id].complete;
-  //   this.setState({ toDo});
-  //  }
   check(newItem) {
     const toDo = this.state.toDo;
     const newTodo = toDo.map(item => {
@@ -223,6 +199,7 @@ class TodoApp extends React.Component {
             <input type="text" ref={this.toDoInput} />
             <span>(press enter to add)</span>
           </form>
+          {/* <AddNewToDo insert={this.addToDo}/> */}
         </div>
         <TodoList
           list={this.state.toDo}
